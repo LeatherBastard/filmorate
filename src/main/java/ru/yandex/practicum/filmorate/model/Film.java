@@ -12,12 +12,13 @@ public class Film extends Entity {
     private final String description;
     private final LocalDate releaseDate;
     private final int duration;
+
     @Builder
-    public Film(Integer id,String name,String description,LocalDate releaseDate,int duration) {
+    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration) {
         super(id);
-       this.name=name;
-       this.description=description;
-       this.releaseDate=releaseDate;
-       this.duration=duration;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
     }
 }
