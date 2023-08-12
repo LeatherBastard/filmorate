@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static ru.yandex.practicum.filmorate.controller.FilmController.validateFilm;
+
 
 class FilmControllerTest {
 
@@ -15,13 +16,19 @@ class FilmControllerTest {
     private static final String FILM_DESCRIPTION = "An insomniac office worker and" +
             " a devil-may-care soap maker form an underground fight club that evolves into much more.";
 
+    private FilmController filmController;
+
+    @BeforeEach
+    void initialize() {
+        filmController = new FilmController();
+    }
 
     @Test
     void testValidateFilmIfAllValid() {
         Film film = new Film(0, FILM_NAME, FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
                 139);
-        assertTrue(validateFilm(film));
+        assertTrue(filmController.validate(film));
     }
 
     @Test
@@ -29,7 +36,7 @@ class FilmControllerTest {
         Film film = new Film(0, "", FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
                 139);
-        assertFalse(validateFilm(film));
+        assertFalse(filmController.validate(film));
     }
 
     @Test
@@ -42,7 +49,7 @@ class FilmControllerTest {
                 description,
                 LocalDate.of(2000, 1, 13),
                 139);
-        assertFalse(validateFilm(film));
+        assertFalse(filmController.validate(film));
     }
 
     @Test
@@ -51,7 +58,7 @@ class FilmControllerTest {
                 FILM_DESCRIPTION,
                 LocalDate.of(1894, 12, 13),
                 139);
-        assertFalse(validateFilm(film));
+        assertFalse(filmController.validate(film));
     }
 
     @Test
@@ -60,7 +67,9 @@ class FilmControllerTest {
                 FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
                 -5);
-        assertFalse(validateFilm(film));
+        assertFalse(filmController.validate(film));
     }
+
+
 }
 

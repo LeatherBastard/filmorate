@@ -14,7 +14,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/films")
-public class FilmController {
+public class FilmController extends Controller<Film> {
 
     private static final String LOGGER_GET_FILMS_INFO_MESSAGE = "Returning list of films";
     private static final String LOGGER_ADD_FILM_INFO_MESSAGE = "Adding film with id: %d";
@@ -24,47 +24,45 @@ public class FilmController {
     private static final String UPDATE_FILM_ID_NOT_FOUND_MESSAGE = "Film with id %d was not found!";
     private static final int MAX_FILM_DESCRIPTION_SIZE = 200;
     private static final LocalDate CINEMA_DAY = LocalDate.of(1895, 12, 28);
-    private final Map<Integer, Film> films = new HashMap<>();
-    private static int id = 0;
 
     @GetMapping
-    public List<Film> getFilms() {
+    public List<Film> getAll() {
         log.info(LOGGER_GET_FILMS_INFO_MESSAGE);
-        return new ArrayList<>(films.values());
+        return new ArrayList<>(entities.values());
     }
 
     @PostMapping
-    public Film addFilm(@RequestBody Film film) {
-        if (!validateFilm(film)) {
+    public Film add(@RequestBody Film film) {
+        if (!validate(film)) {
             log.warn(FILM_VALIDATION_MESSAGE);
             throw new ValidationException(FILM_VALIDATION_MESSAGE);
         }
         film = new Film(getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
         log.info(String.format(LOGGER_ADD_FILM_INFO_MESSAGE, film.getId()));
-        films.put(film.getId(), film);
+        entities.put(film.getId(), film);
         return film;
     }
 
     @PutMapping
-    public Film updateFilm(@RequestBody Film film) {
+    public Film update(@RequestBody Film film) {
         if (film.getId() == null) {
             log.warn(UPDATE_FILM_HAS_NO_ID);
             throw new UpdateEmptyIdException(UPDATE_FILM_HAS_NO_ID);
         }
-        if (!films.containsKey(film.getId())) {
+        if (!entities.containsKey(film.getId())) {
             log.warn(String.format(UPDATE_FILM_ID_NOT_FOUND_MESSAGE, film.getId()));
             throw new UpdateIdNotFoundException(UPDATE_FILM_ID_NOT_FOUND_MESSAGE, film.getId());
         }
-        if (!validateFilm(film)) {
+        if (!validate(film)) {
             log.warn(FILM_VALIDATION_MESSAGE);
             throw new ValidationException(FILM_VALIDATION_MESSAGE);
         }
         log.info(String.format(LOGGER_UPDATE_FILM_INFO_MESSAGE, film.getId()));
-        films.put(film.getId(), film);
+        entities.put(film.getId(), film);
         return film;
     }
 
-    public static boolean validateFilm(Film film) {
+    public boolean validate(Film film) {
         boolean result = true;
         if (film.getName().isEmpty()
                 || film.getDescription().length() > MAX_FILM_DESCRIPTION_SIZE
@@ -73,7 +71,7 @@ public class FilmController {
         return result;
     }
 
-    private static int getId() {
-        return ++id;
+    protected int getId() {
+        return ++idCounter;
     }
 }
