@@ -22,8 +22,7 @@ public class FilmController extends Controller<Film> {
     private static final String LOGGER_UPDATE_FILM_INFO_MESSAGE = "Updating film with id: %d";
     private static final String UPDATE_FILM_HAS_NO_ID = "Update film has no ID!";
     private static final String UPDATE_FILM_ID_NOT_FOUND_MESSAGE = "Film with id %d was not found!";
-    private static final int MAX_FILM_DESCRIPTION_SIZE = 200;
-    private static final LocalDate CINEMA_DAY = LocalDate.of(1895, 12, 28);
+
 
     @GetMapping
     public List<Film> getAll() {
@@ -62,14 +61,6 @@ public class FilmController extends Controller<Film> {
         return film;
     }
 
-    public boolean validate(Film film) {
-        boolean result = true;
-        if (film.getName().isEmpty()
-                || film.getDescription().length() > MAX_FILM_DESCRIPTION_SIZE
-                || film.getReleaseDate().isBefore(CINEMA_DAY) || film.getDuration() < 0)
-            result = false;
-        return result;
-    }
 
     protected int getId() {
         return ++idCounter;

@@ -14,7 +14,6 @@ public abstract class Controller<T> {
 
     public abstract T update(T entity);
 
-    public abstract boolean validate(T entity);
 
     protected int getId() {
         return ++idCounter;
