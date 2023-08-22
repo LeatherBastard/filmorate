@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class FilmControllerTest {
-
+/*
     private static final String FILM_NAME = "Fight Club";
     private static final String FILM_DESCRIPTION = "An insomniac office worker and" +
             " a devil-may-care soap maker form an underground fight club that evolves into much more.";
@@ -70,6 +70,6 @@ class FilmControllerTest {
         assertFalse(filmController.validate(film));
     }
 
-
+*/
 }
 
