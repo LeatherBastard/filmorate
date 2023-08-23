@@ -7,6 +7,8 @@ public abstract class Controller<T> {
 
     public abstract T add(T entity);
 
+    public abstract T getById(int id);
+
     public abstract T update(T entity);
 
 }

@@ -32,4 +32,8 @@ public class Film extends Entity {
     public void removeLike(Integer userId) {
         likes.remove(userId);
     }
+
+    public int getLikesCount() {
+        return likes.size();
+    }
 }

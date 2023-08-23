@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.UpdateEmptyIdException;
 import ru.yandex.practicum.filmorate.exception.UpdateIdNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -17,11 +18,10 @@ public class InMemoryUserStorage extends InMemoryStorage<User> implements UserSt
     private static final String EMAIL_SIGN_CHARACTER = "@";
     private static final String USER_VALIDATION_MESSAGE = "User did not pass the validation!";
     private static final String UPDATE_USER_HAS_NO_ID = "Update user has no ID!";
-    private static final String UPDATE_USER_ID_NOT_FOUND_MESSAGE = "User with id %d was not found!";
+    private static final String USER_ID_NOT_FOUND_MESSAGE = "User with id %d was not found!";
 
 
     public List<User> getAll() {
-
         return new ArrayList<>(entities.values());
     }
 
@@ -40,6 +40,14 @@ public class InMemoryUserStorage extends InMemoryStorage<User> implements UserSt
         return user;
     }
 
+    @Override
+    public User getById(Integer id) {
+        User user = entities.get(id);
+        if (user == null) {
+            throw new EntityNotFoundException(USER_ID_NOT_FOUND_MESSAGE, id);
+        }
+        return user;
+    }
 
     public User update(@RequestBody User user) {
         if (user.getId() == null) {
@@ -48,7 +56,7 @@ public class InMemoryUserStorage extends InMemoryStorage<User> implements UserSt
         }
         if (!entities.containsKey(user.getId())) {
 
-            throw new UpdateIdNotFoundException(UPDATE_USER_ID_NOT_FOUND_MESSAGE, user.getId());
+            throw new UpdateIdNotFoundException(USER_ID_NOT_FOUND_MESSAGE, user.getId());
         }
         if (!validate(user)) {
 
@@ -62,9 +70,8 @@ public class InMemoryUserStorage extends InMemoryStorage<User> implements UserSt
     }
 
     public boolean validate(User user) {
-        boolean result = !user.getEmail().isEmpty() && user.getEmail().contains(EMAIL_SIGN_CHARACTER)
+        return !user.getEmail().isEmpty() && user.getEmail().contains(EMAIL_SIGN_CHARACTER)
                 && !user.getLogin().isEmpty() && !user.getLogin().contains(SPACE_CHARACTER)
                 && !user.getBirthday().isAfter(LocalDate.now());
-        return result;
     }
 }

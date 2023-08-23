@@ -34,5 +34,9 @@ public class User extends Entity {
         user.friends.remove(getId());
     }
 
+    public int getFriendsCount() {
+        return friends.size();
+    }
+
 
 }
