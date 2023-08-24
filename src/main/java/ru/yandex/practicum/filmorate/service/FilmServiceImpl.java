@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.FilmAndUserException;
+import ru.yandex.practicum.filmorate.exception.AddRemoveLikeException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -49,7 +49,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public void addLike(Film film, Integer userId) {
         if (film.getLikes().contains(userId)) {
-            throw new FilmAndUserException(ADD_LIKE_EXCEPTION_MESSAGE, film.getId(), userId);
+            throw new AddRemoveLikeException(ADD_LIKE_EXCEPTION_MESSAGE, film.getId(), userId);
         }
         film.addLike(userId);
     }
@@ -57,7 +57,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public void removeLike(Film film, Integer userId) {
         if (!film.getLikes().contains(userId)) {
-            throw new FilmAndUserException(REMOVE_LIKE_EXCEPTION_MESSAGE, film.getId(), userId);
+            throw new AddRemoveLikeException(REMOVE_LIKE_EXCEPTION_MESSAGE, film.getId(), userId);
         }
         film.removeLike(userId);
     }

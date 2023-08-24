@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.UserAndFriendException;
+import ru.yandex.practicum.filmorate.exception.AddRemoveFriendException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addToFriends(User user, User friend) {
         if (user.getFriends().contains(friend.getId()) || friend.getFriends().contains(user.getId())) {
-            throw new UserAndFriendException(ADD_TO_FRIENDS_EXCEPTION_MESSAGE, user.getId(), friend.getId());
+            throw new AddRemoveFriendException(ADD_TO_FRIENDS_EXCEPTION_MESSAGE, user.getId(), friend.getId());
         }
         user.addFriend(friend);
     }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeFromFriends(User user, User friend) {
         if (!user.getFriends().contains(friend.getId()) || !friend.getFriends().contains(user.getId())) {
-            throw new UserAndFriendException(REMOVE_FROM_FRIENDS_EXCEPTION_MESSAGE, user.getId(), friend.getId());
+            throw new AddRemoveFriendException(REMOVE_FROM_FRIENDS_EXCEPTION_MESSAGE, user.getId(), friend.getId());
         }
         user.removeFriend(friend);
     }
