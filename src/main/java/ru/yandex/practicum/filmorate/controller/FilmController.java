@@ -11,7 +11,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/films")
-public class FilmController extends Controller<Film> {
+public class FilmController implements Controller<Film> {
 
     private static final String LOGGER_GET_FILMS_MESSAGE = "Returning list of films";
     private static final String LOGGER_ADD_FILM_MESSAGE = "Adding film with id: %d";

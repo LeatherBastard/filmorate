@@ -10,7 +10,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-public class UserController extends Controller<User> {
+public class UserController implements Controller<User> {
 
     private static final String LOGGER_GET_USERS_MESSAGE = "Returning list of users";
     private static final String LOGGER_ADD_USER_MESSAGE = "Adding user with id: %d";

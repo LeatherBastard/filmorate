@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.AddRemoveLikeException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -16,7 +15,7 @@ public class FilmServiceImpl implements FilmService {
     private static final String REMOVE_LIKE_EXCEPTION_MESSAGE = "Film with id %d has no like from user with id %d";
     private final FilmStorage filmStorage;
 
-    @Autowired
+
     public FilmServiceImpl(FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
     }

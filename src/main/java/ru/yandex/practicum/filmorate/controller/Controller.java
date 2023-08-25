@@ -1,14 +1,16 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import ru.yandex.practicum.filmorate.model.Entity;
+
 import java.util.List;
 
-public abstract class Controller<T> {
-    public abstract List<T> getAll();
+public interface Controller<T extends Entity> {
+    List<T> getAll();
 
-    public abstract T add(T entity);
+    T add(T entity);
 
-    public abstract T getById(int id);
+    T getById(int id);
 
-    public abstract T update(T entity);
+    T update(T entity);
 
 }
