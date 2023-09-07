@@ -1,22 +1,16 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import java.util.HashMap;
+import ru.yandex.practicum.filmorate.model.Entity;
+
 import java.util.List;
-import java.util.Map;
 
-public abstract class Controller<T> {
-    protected int idCounter = 0;
-    protected Map<Integer, T> entities = new HashMap<>();
+public interface Controller<T extends Entity> {
+    List<T> getAll();
 
-    public abstract List<T> getAll();
+    T add(T entity);
 
-    public abstract T add(T entity);
+    T getById(int id);
 
-    public abstract T update(T entity);
+    T update(T entity);
 
-    public abstract boolean validate(T entity);
-
-    protected int getId() {
-        return ++idCounter;
-    }
 }
