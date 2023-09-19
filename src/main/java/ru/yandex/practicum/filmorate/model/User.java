@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,8 +12,8 @@ import java.util.Set;
 
 @Data
 public class User extends Entity {
-    private final String NOT_COMMITTED_FRIENDSHIP_STATUS = "Not commited";
-    private final String COMMITTED_FRIENDSHIP_STATUS = "Commited";
+    private final Integer NOT_COMMITTED_FRIENDSHIP_STATUS_ID = 1;
+    private final Integer COMMITTED_FRIENDSHIP_STATUS_ID = 2;
 
     private final String email;
     private final String login;
@@ -30,17 +31,22 @@ public class User extends Entity {
     }
 
     public void addFriend(User user) {
-        if (user.friends.contains(new FriendShip(getId(), NOT_COMMITTED_FRIENDSHIP_STATUS))) {
-            friends.add(new FriendShip(user.getId(), COMMITTED_FRIENDSHIP_STATUS));
-            user.friends.add(new FriendShip(getId(), COMMITTED_FRIENDSHIP_STATUS));
+        FriendShip uncommitedFriendship = new FriendShip(getId(), NOT_COMMITTED_FRIENDSHIP_STATUS_ID);
+        if (user.friends.contains(uncommitedFriendship)) {
+            user.friends.remove(uncommitedFriendship);
+            friends.add(new FriendShip(user.getId(), COMMITTED_FRIENDSHIP_STATUS_ID));
+            user.friends.add(new FriendShip(getId(), COMMITTED_FRIENDSHIP_STATUS_ID));
         }
-        friends.add(new FriendShip(user.getId(), NOT_COMMITTED_FRIENDSHIP_STATUS));
-        user.friends.add(new FriendShip(getId(), NOT_COMMITTED_FRIENDSHIP_STATUS));
+        friends.add(new FriendShip(user.getId(), NOT_COMMITTED_FRIENDSHIP_STATUS_ID));
     }
 
     public void removeFriend(User user) {
         friends.remove(user.getId());
-        user.friends.remove(getId());
+        FriendShip commitedFriendship = new FriendShip(getId(), COMMITTED_FRIENDSHIP_STATUS_ID);
+        if (user.friends.contains(commitedFriendship)) {
+            user.friends.remove(commitedFriendship);
+            user.friends.add(new FriendShip(getId(), NOT_COMMITTED_FRIENDSHIP_STATUS_ID));
+        }
     }
 
     public int getFriendsCount() {

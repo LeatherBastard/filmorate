@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class FriendShip {
     private final Integer userId;
-    private final String status;
+    private final Integer statusId;
 }
