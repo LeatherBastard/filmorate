@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.inmemory;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exception.UpdateEmptyIdException;
 import ru.yandex.practicum.filmorate.exception.UpdateIdNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
         if (!validate(film)) {
             throw new ValidationException(FILM_VALIDATION_MESSAGE);
         }
-        film = new Film(getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
+        film = new Film(getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getRating());
         entities.put(film.getId(), film);
         return film;
     }

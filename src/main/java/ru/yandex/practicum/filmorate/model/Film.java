@@ -15,14 +15,16 @@ public class Film extends Entity {
     private final LocalDate releaseDate;
     private final int duration;
     private final Set<Integer> likes = new HashSet<>();
+    private final String rating;
 
     @Builder
-    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration) {
+    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, String rating) {
         super(id);
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.rating = rating;
     }
 
     public void addLike(Integer userId) {
