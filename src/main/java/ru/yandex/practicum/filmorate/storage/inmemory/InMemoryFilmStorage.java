@@ -30,7 +30,7 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
         if (!validate(film)) {
             throw new ValidationException(FILM_VALIDATION_MESSAGE);
         }
-        film = new Film(getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getRatingId());
+        film = new Film(getId(), film.getTitle(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getRatingId());
         entities.put(film.getId(), film);
         return film;
     }
@@ -60,7 +60,7 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
 
 
     public boolean validate(Film film) {
-        return !film.getName().isEmpty()
+        return !film.getTitle().isEmpty()
                 && film.getDescription().length() <= MAX_FILM_DESCRIPTION_SIZE
                 && !film.getReleaseDate().isBefore(CINEMA_DAY) && film.getDuration() >= 0;
     }

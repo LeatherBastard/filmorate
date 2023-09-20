@@ -9,8 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
 public class Film extends Entity {
-    private final String name;
+    private final String title;
     private final String description;
     private final LocalDate releaseDate;
     private final Set<Integer> genres = new HashSet<>();
@@ -18,10 +19,10 @@ public class Film extends Entity {
     private final Set<Integer> likes = new HashSet<>();
     private final Integer ratingId;
 
-    @Builder
+
     public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, Integer ratingId) {
         super(id);
-        this.name = name;
+        this.title = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
@@ -30,7 +31,7 @@ public class Film extends Entity {
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Set<Integer> genres, int duration, Integer ratingId) {
         super(id);
-        this.name = name;
+        this.title = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.genres.addAll(genres);

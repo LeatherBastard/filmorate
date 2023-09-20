@@ -1,4 +1,4 @@
-/*
+
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ class FilmStorageTest {
     void testValidateFilmIfAllValid() {
         Film film = new Film(0, FILM_NAME, FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
-                139);
+                139, 3);
         assertTrue(filmStorage.validate(film));
     }
 
@@ -38,7 +38,7 @@ class FilmStorageTest {
     void testValidateFilmIfNameEmpty() {
         Film film = new Film(0, "", FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
-                139);
+                139, 3);
         assertFalse(filmStorage.validate(film));
     }
 
@@ -51,7 +51,7 @@ class FilmStorageTest {
         Film film = new Film(0, FILM_NAME,
                 description,
                 LocalDate.of(2000, 1, 13),
-                139);
+                139, 3);
         assertFalse(filmStorage.validate(film));
     }
 
@@ -60,7 +60,7 @@ class FilmStorageTest {
         Film film = new Film(0, FILM_NAME,
                 FILM_DESCRIPTION,
                 LocalDate.of(1894, 12, 13),
-                139);
+                139, 3);
         assertFalse(filmStorage.validate(film));
     }
 
@@ -69,7 +69,7 @@ class FilmStorageTest {
         Film film = new Film(0, FILM_NAME,
                 FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
-                -5);
+                -5, 3);
         assertFalse(filmStorage.validate(film));
     }
 
@@ -77,5 +77,3 @@ class FilmStorageTest {
 }
 
 
-
- */
