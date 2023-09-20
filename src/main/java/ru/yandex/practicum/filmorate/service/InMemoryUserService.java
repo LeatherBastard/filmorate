@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.AddRemoveFriendException;
+import ru.yandex.practicum.filmorate.model.FriendShip;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -12,13 +13,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class InMemoryUserService implements UserService {
     private static final String ADD_TO_FRIENDS_EXCEPTION_MESSAGE = "User with id %d already has a friend with id %d";
     private static final String REMOVE_FROM_FRIENDS_EXCEPTION_MESSAGE = "User with id %d has not got a friend with id %d";
     private final UserStorage userStorage;
 
 
-    public UserServiceImpl(UserStorage userStorage) {
+    public InMemoryUserService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
@@ -35,7 +36,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getFriends(int userId) {
         User user = userStorage.getById(userId);
-        return user.getFriends().stream().map(this::getById).collect(Collectors.toList());
+        return user.getFriends().stream()
+                .map(FriendShip::getFriendId)
+                .map(this::getById).collect(Collectors.toList());
     }
 
 
@@ -73,11 +76,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getCommonFriends(User firstUser, User secondUser) {
-        Set<Integer> firstUserFriends = firstUser.getFriends();
-        Set<Integer> secondUserFriends = secondUser.getFriends();
+        Set<FriendShip> firstUserFriends = firstUser.getFriends();
+        Set<FriendShip> secondUserFriends = secondUser.getFriends();
         Map<Integer, Integer> commonFriendsId = new HashMap<>();
-        firstUserFriends.forEach(id -> commonFriendsId.put(id, commonFriendsId.getOrDefault(id, 0) + 1));
-        secondUserFriends.forEach(id -> commonFriendsId.put(id, commonFriendsId.getOrDefault(id, 0) + 1));
+        firstUserFriends.forEach(friendShip -> commonFriendsId.put(friendShip.getFriendId(),
+                commonFriendsId.getOrDefault(friendShip.getFriendId(), 0) + 1));
+        secondUserFriends.forEach(friendShip -> commonFriendsId.put(friendShip.getFriendId(),
+                commonFriendsId.getOrDefault(friendShip.getFriendId(), 0) + 1));
         return commonFriendsId
                 .entrySet().stream().filter(element -> element.getValue() == 2)
                 .map(Map.Entry::getKey).map(userStorage::getById)

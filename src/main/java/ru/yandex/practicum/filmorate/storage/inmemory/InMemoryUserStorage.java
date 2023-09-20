@@ -15,11 +15,7 @@ import java.util.List;
 
 @Component
 public class InMemoryUserStorage extends InMemoryStorage<User> implements UserStorage {
-    private static final String SPACE_CHARACTER = " ";
-    private static final String EMAIL_SIGN_CHARACTER = "@";
-    private static final String USER_VALIDATION_MESSAGE = "User did not pass the validation!";
-    private static final String UPDATE_USER_HAS_NO_ID = "Update user has no ID!";
-    private static final String USER_ID_NOT_FOUND_MESSAGE = "User with id %d was not found!";
+
 
 
     public List<User> getAll() {
@@ -70,9 +66,5 @@ public class InMemoryUserStorage extends InMemoryStorage<User> implements UserSt
         return user;
     }
 
-    public boolean validate(User user) {
-        return !user.getEmail().isEmpty() && user.getEmail().contains(EMAIL_SIGN_CHARACTER)
-                && !user.getLogin().isEmpty() && !user.getLogin().contains(SPACE_CHARACTER)
-                && !user.getBirthday().isAfter(LocalDate.now());
-    }
+
 }

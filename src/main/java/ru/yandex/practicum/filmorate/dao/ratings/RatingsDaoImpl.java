@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.dao.ratings;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.DaoOperations;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class RatingsDaoImpl implements DaoOperations<Rating>, RatingsDao {
     private static final String ADD_RATING_QUERY = "INSERT INTO ratings(name,description) VALUES (?,?)";
     private static final String GET_BY_ID_RATING_QUERY = "SELECT * FROM ratings WHERE rating_id = ?";

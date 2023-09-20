@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Data
-@Builder
+
 public class User extends Entity {
     private final Integer NOT_COMMITTED_FRIENDSHIP_STATUS_ID = 1;
     private final Integer COMMITTED_FRIENDSHIP_STATUS_ID = 2;
@@ -21,7 +21,7 @@ public class User extends Entity {
     private final LocalDate birthday;
     private final Set<FriendShip> friends = new HashSet<>();
 
-
+    @Builder
     public User(Integer id, String email, String login, String name, LocalDate birthday) {
         super(id);
         this.email = email;

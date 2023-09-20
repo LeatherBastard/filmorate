@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.dao.statuses;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.DaoOperations;
 import ru.yandex.practicum.filmorate.model.Status;
 
@@ -8,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class StatusesDaoImpl implements DaoOperations<Status>, StatusesDao {
     private static final String ADD_STATUS_QUERY = "INSERT INTO statuses (name) VALUES (?)";
     private static final String GET_BY_ID_STATUS_QUERY = "SELECT * FROM statuses WHERE status_id = ?";

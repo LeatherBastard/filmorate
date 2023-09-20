@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FilmServiceImpl implements FilmService {
+public class InMemoryFilmService implements FilmService {
     private static final String ADD_LIKE_EXCEPTION_MESSAGE = "Film with id %d already has a like from user with id %d";
     private static final String REMOVE_LIKE_EXCEPTION_MESSAGE = "Film with id %d has no like from user with id %d";
     private final FilmStorage filmStorage;
 
 
-    public FilmServiceImpl(FilmStorage filmStorage) {
+    public InMemoryFilmService(FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
     }
 

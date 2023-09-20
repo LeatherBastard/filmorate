@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Builder
 public class Film extends Entity {
     private final String title;
     private final String description;
@@ -19,7 +18,7 @@ public class Film extends Entity {
     private final Set<Integer> likes = new HashSet<>();
     private final Integer ratingId;
 
-
+    @Builder
     public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, Integer ratingId) {
         super(id);
         this.title = name;
@@ -29,6 +28,7 @@ public class Film extends Entity {
         this.ratingId = ratingId;
     }
 
+    @Builder
     public Film(Integer id, String name, String description, LocalDate releaseDate, Set<Integer> genres, int duration, Integer ratingId) {
         super(id);
         this.title = name;

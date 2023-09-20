@@ -14,17 +14,9 @@ import java.util.List;
 
 @Component
 public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmStorage {
-    private static final String FILM_VALIDATION_MESSAGE = "Film did not pass the validation";
-    private static final String UPDATE_FILM_HAS_NO_ID = "Update film has no ID!";
-    private static final String FILM_ID_NOT_FOUND_MESSAGE = "Film with id %d was not found!";
-    private static final int MAX_FILM_DESCRIPTION_SIZE = 200;
-    private static final LocalDate CINEMA_DAY = LocalDate.of(1895, 12, 28);
-
-
     public List<Film> getAll() {
         return new ArrayList<>(entities.values());
     }
-
 
     public Film add(Film film) {
         if (!validate(film)) {
@@ -56,12 +48,5 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
         }
         entities.put(film.getId(), film);
         return film;
-    }
-
-
-    public boolean validate(Film film) {
-        return !film.getTitle().isEmpty()
-                && film.getDescription().length() <= MAX_FILM_DESCRIPTION_SIZE
-                && !film.getReleaseDate().isBefore(CINEMA_DAY) && film.getDuration() >= 0;
     }
 }

@@ -4,13 +4,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.DaoOperations;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class FilmDbStorage implements DaoOperations<Film> {
+public class FilmDbStorage extends DbStorage implements FilmStorage {
     private static final String ADD_FILM_QUERY = "INSERT INTO films (title,description,release_date,duration,rating_id)" +
             " VALUES (?,?,?,?,?)";
     private static final String GET_BY_ID_FILM_QUERY = "SELECT * FROM films WHERE film_id = ?";
@@ -26,25 +27,24 @@ public class FilmDbStorage implements DaoOperations<Film> {
     private static final String DURATION_FILMS_COLUMN = "duration";
     private static final String RATING_ID_FILMS_COLUMN = "rating_id";
 
-
-    private final JdbcTemplate jdbcTemplate;
-
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        super(jdbcTemplate);
     }
 
+
     @Override
-    public boolean add(Film element) {
-        return jdbcTemplate.update(ADD_FILM_QUERY,
+    public Film add(Film element) {
+        jdbcTemplate.update(ADD_FILM_QUERY,
                 element.getTitle(),
                 element.getDescription(),
                 element.getReleaseDate(),
                 element.getDuration(),
-                element.getRatingId()) > 0;
+                element.getRatingId());
+        return element;
     }
 
     @Override
-    public Film getById(int id) {
+    public Film getById(Integer id) {
         return jdbcTemplate.queryForObject(GET_BY_ID_FILM_QUERY, this::mapRowToFilm, id);
     }
 
@@ -53,24 +53,30 @@ public class FilmDbStorage implements DaoOperations<Film> {
         return jdbcTemplate.query(GET_ALL_FILMS_QUERY, this::mapRowToFilm);
     }
 
-    @Override
+
     public boolean deleteById(int id) {
         return jdbcTemplate.update(DELETE_BY_ID_FILM_QUERY, id) > 0;
     }
 
-    @Override
+
     public int deleteAll() {
         return jdbcTemplate.update(DELETE_ALL_FILMS_QUERY);
     }
 
     @Override
-    public boolean update(Film element) {
-        return jdbcTemplate.update(UPDATE_FILM_QUERY,
+    public Film update(Film element) {
+        jdbcTemplate.update(UPDATE_FILM_QUERY,
                 element.getTitle(),
                 element.getDescription(),
                 element.getReleaseDate(),
                 element.getDuration(),
-                element.getRatingId()) > 0;
+                element.getRatingId());
+        return element;
+    }
+
+    @Override
+    public boolean validate(Film entity) {
+        return false;
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
@@ -82,4 +88,6 @@ public class FilmDbStorage implements DaoOperations<Film> {
                 resultSet.getInt(RATING_ID_FILMS_COLUMN)
         );
     }
+
+
 }
