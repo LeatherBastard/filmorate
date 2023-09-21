@@ -9,11 +9,10 @@ import java.util.List;
 
 @Service
 public class FilmServiceImp implements FilmService {
-
+    @Qualifier("filmDbStorage")
     private final FilmStorage filmStorage;
 
-
-    public FilmServiceImp(FilmStorage filmStorage) {
+    public FilmServiceImp( @Qualifier("filmDbStorage")FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
     }
 

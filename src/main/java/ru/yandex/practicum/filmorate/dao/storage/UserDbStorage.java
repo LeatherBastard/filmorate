@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@Primary
 public class UserDbStorage implements UserStorage {
     private static final String ADD_USER_QUERY = "INSERT INTO users (email,login,name,birthday) VALUES (?,?,?,?)";
     private static final String GET_BY_ID_USER_QUERY = "SELECT * FROM users WHERE user_id = ?";
@@ -96,7 +95,9 @@ public class UserDbStorage implements UserStorage {
         if (user.getId() == null) {
             throw new UpdateEmptyIdException(UPDATE_USER_HAS_NO_ID);
         }
-
+        if (user.getId() < 0 || user.getId()-1 > getAll().size()-1) {
+            throw new EntityNotFoundException(USER_ID_NOT_FOUND_MESSAGE, user.getId());
+        }
         if (!validate(user)) {
             throw new ValidationException(USER_VALIDATION_MESSAGE);
         }

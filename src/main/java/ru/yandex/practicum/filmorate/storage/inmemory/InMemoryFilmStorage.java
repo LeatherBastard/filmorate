@@ -22,7 +22,7 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
         if (!validate(film)) {
             throw new ValidationException(FILM_VALIDATION_MESSAGE);
         }
-        film = new Film(getId(), film.getTitle(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getRatingId());
+        film = new Film(getId(), film.getTitle(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa());
         entities.put(film.getId(), film);
         return film;
     }

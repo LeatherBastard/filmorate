@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UpdateEmptyIdException;
+import ru.yandex.practicum.filmorate.exception.UpdateIdNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@Primary
+
 public class FilmDbStorage implements FilmStorage {
     private static final String ADD_FILM_QUERY = "INSERT INTO films (title,description,release_date,duration,rating_id)" +
             " VALUES (?,?,?,?,?)";
@@ -53,7 +54,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getRatingId());
+                film.getMpa());
         return film;
     }
 
@@ -84,6 +85,7 @@ public class FilmDbStorage implements FilmStorage {
         if (film.getId() == null) {
             throw new UpdateEmptyIdException(UPDATE_FILM_HAS_NO_ID);
         }
+
         if (!validate(film)) {
             throw new ValidationException(FILM_VALIDATION_MESSAGE);
         }
@@ -92,7 +94,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getRatingId());
+                film.getMpa());
         return film;
     }
 
