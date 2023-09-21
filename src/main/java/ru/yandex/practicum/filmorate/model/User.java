@@ -10,11 +10,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static ru.yandex.practicum.filmorate.dao.storage.UserDbStorage.COMMITTED_FRIENDSHIP_STATUS_ID;
+import static ru.yandex.practicum.filmorate.dao.storage.UserDbStorage.NOT_COMMITTED_FRIENDSHIP_STATUS_ID;
+
 @Data
 
 public class User extends Entity {
-    private final Integer NOT_COMMITTED_FRIENDSHIP_STATUS_ID = 1;
-    private final Integer COMMITTED_FRIENDSHIP_STATUS_ID = 2;
     private final String email;
     private final String login;
     private final String name;
@@ -53,5 +54,13 @@ public class User extends Entity {
         return friends.size();
     }
 
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("email", email);
+        values.put("login", login);
+        values.put("name", name);
+        values.put("birthday", birthday);
+        return values;
+    }
 
 }

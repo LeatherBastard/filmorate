@@ -11,7 +11,7 @@ public interface Storage<T extends Entity> {
 
     T add(T entity);
 
-    T update(T film);
+    T update(T entity);
 
     boolean validate(T entity);
 

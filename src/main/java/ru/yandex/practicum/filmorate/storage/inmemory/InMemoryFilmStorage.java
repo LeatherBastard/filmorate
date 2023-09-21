@@ -1,18 +1,18 @@
 package ru.yandex.practicum.filmorate.storage.inmemory;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UpdateEmptyIdException;
-import ru.yandex.practicum.filmorate.exception.UpdateIdNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
+@Repository
 public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmStorage {
     public List<Film> getAll() {
         return new ArrayList<>(entities.values());
@@ -48,5 +48,28 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
         }
         entities.put(film.getId(), film);
         return film;
+    }
+
+    @Override
+    public void addLike(Film film, Integer userId) {
+        if (film.getLikes().contains(userId)) {
+            throw new AddRemoveLikeException(ADD_LIKE_EXCEPTION_MESSAGE, film.getId(), userId);
+        }
+        film.addLike(userId);
+    }
+
+    @Override
+    public void removeLike(Film film, Integer userId) {
+        if (!film.getLikes().contains(userId)) {
+            throw new AddRemoveLikeException(REMOVE_LIKE_EXCEPTION_MESSAGE, film.getId(), userId);
+        }
+        film.removeLike(userId);
+    }
+
+    @Override
+    public List<Film> getMostPopular(int count) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(Film::getLikesCount, Comparator.reverseOrder())).limit(count)
+                .collect(Collectors.toList());
     }
 }
