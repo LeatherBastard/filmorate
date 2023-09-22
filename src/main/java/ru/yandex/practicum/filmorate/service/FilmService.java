@@ -11,4 +11,5 @@ public interface FilmService extends EntityService<Film> {
 
     List<Film> getMostPopular(int count);
 
+    boolean validate(Film entity);
 }

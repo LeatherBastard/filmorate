@@ -9,7 +9,7 @@ public interface Controller<T extends Entity> {
 
     T add(T entity);
 
-    T getById(int id);
+    T getById(Integer id);
 
     T update(T entity);
 

@@ -39,7 +39,7 @@ public class UserController implements Controller<User> {
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable int id) {
+    public User getById(@PathVariable Integer id) {
         log.info(String.format(LOGGER_GET_USER_BY_ID_MESSAGE, id));
         return userService.getById(id);
     }

@@ -13,4 +13,6 @@ public interface UserService extends EntityService<User> {
     void removeFromFriends(User user, User friend);
 
     List<User> getCommonFriends(User firstUser, User secondUser);
+
+    boolean validate(User entity);
 }

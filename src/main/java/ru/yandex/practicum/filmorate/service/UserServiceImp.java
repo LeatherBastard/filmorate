@@ -9,10 +9,10 @@ import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
-    @Qualifier("userDbStorage")
+    @Qualifier("inMemoryUserStorage")
     private final UserStorage userStorage;
 
-
+   // userDbStorage
     public UserServiceImp(  @Qualifier("userDbStorage")UserStorage userStorage) {
         this.userStorage = userStorage;
     }

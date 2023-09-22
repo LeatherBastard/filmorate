@@ -5,39 +5,39 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class Film extends Entity {
-    private final String title;
-    private final String description;
-    private final LocalDate releaseDate;
-    private final Set<Integer> genres = new HashSet<>();
-    private final int duration;
-    private final Set<Integer> likes = new HashSet<>();
-    private final Integer mpa;
+    private  String name;
+    private  String description;
+    private  LocalDate releaseDate;
+    private  List<Genre> genres = new ArrayList<>();
+    private  int duration;
+    private int rate = 0;
+    private  Set<Integer> likes = new HashSet<>();
+    private  Rating mpa;
 
-    @Builder
-    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, Integer ratingId) {
+    public Film()
+    {
+
+    }
+
+    public Film(Integer id, String name,String description, LocalDate releaseDate, int duration,Rating mpa, int rate, List<Genre> genres) {
         super(id);
-        this.title = name;
+        this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.mpa = ratingId;
-    }
-
-    @Builder
-    public Film(Integer id, String name, String description, LocalDate releaseDate, Set<Integer> genres, int duration, Integer ratingId) {
-        super(id);
-        this.title = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
+        this.rate = rate;
+        this.mpa = mpa;
         this.genres.addAll(genres);
-        this.duration = duration;
-        this.mpa = ratingId;
     }
+
+
+
+
+
 
     public void addLike(Integer userId) {
         likes.add(userId);
@@ -49,5 +49,16 @@ public class Film extends Entity {
 
     public int getLikesCount() {
         return likes.size();
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("name", name);
+        values.put("description", description);
+        values.put("release_date", releaseDate);
+        values.put("duration", duration);
+        values.put("rate",rate);
+        values.put("rating_id", mpa.getId());
+        return values;
     }
 }

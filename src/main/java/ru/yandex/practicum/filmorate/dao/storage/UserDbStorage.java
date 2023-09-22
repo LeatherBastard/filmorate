@@ -1,15 +1,10 @@
 package ru.yandex.practicum.filmorate.dao.storage;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UpdateEmptyIdException;
-import ru.yandex.practicum.filmorate.exception.UpdateIdNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -21,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserDbStorage implements UserStorage {
-    private static final String ADD_USER_QUERY = "INSERT INTO users (email,login,name,birthday) VALUES (?,?,?,?)";
     private static final String GET_BY_ID_USER_QUERY = "SELECT * FROM users WHERE user_id = ?";
     private static final String GET_ALL_USERS_QUERY = "SELECT * FROM users";
     private static final String DELETE_BY_ID_USER_QUERY = "DELETE FROM users WHERE user_id = ?";
@@ -34,9 +28,8 @@ public class UserDbStorage implements UserStorage {
     private static final String GET_USER_FRIENDS_QUERY = "SELECT friend_id FROM friendship WHERE user_id = ?";
     private static final String DELETE_FROM_USER_FRIENDS_QUERY = "DELETE FROM friendship WHERE user_id = ?" +
             " AND friend_id = ?";
-    private static final String GET_COMMON_USER_FRIENDS_QUERY = "SELECT friend_id " +
-            "FROM friendship" +
-            "WHERE user_id= ? AND friend_id IN" +
+    private static final String GET_COMMON_USER_FRIENDS_QUERY = "SELECT friend_id FROM friendship" +
+            " WHERE user_id= ? AND friend_id IN " +
             "(SELECT friend_id FROM friendship WHERE user_id= ?)";
     private static final String ID_USERS_COLUMN = "user_id";
     private static final String EMAIL_USERS_COLUMN = "email";
@@ -70,6 +63,9 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getById(Integer id) {
+        if (id < 0 || id - 1 > getAll().size() - 1) {
+            throw new EntityNotFoundException(USER_ID_NOT_FOUND_MESSAGE, id);
+        }
         User user = jdbcTemplate.queryForObject(GET_BY_ID_USER_QUERY, this::mapRowToUser, id);
         if (user == null) {
             throw new EntityNotFoundException(USER_ID_NOT_FOUND_MESSAGE, id);
@@ -95,12 +91,13 @@ public class UserDbStorage implements UserStorage {
         if (user.getId() == null) {
             throw new UpdateEmptyIdException(UPDATE_USER_HAS_NO_ID);
         }
-        if (user.getId() < 0 || user.getId()-1 > getAll().size()-1) {
+        if (user.getId() < 0 || user.getId() - 1 > getAll().size() - 1) {
             throw new EntityNotFoundException(USER_ID_NOT_FOUND_MESSAGE, user.getId());
         }
         if (!validate(user)) {
             throw new ValidationException(USER_VALIDATION_MESSAGE);
         }
+
 
         if (user.getName() == null || user.getName().isEmpty())
             user = new User(user.getId(), user.getEmail(), user.getLogin(), user.getLogin(), user.getBirthday());

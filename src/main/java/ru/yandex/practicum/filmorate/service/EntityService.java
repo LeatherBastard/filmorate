@@ -13,5 +13,5 @@ public interface EntityService<T extends Entity> {
 
     T update(T entity);
 
-    boolean validate(T entity);
+
 }

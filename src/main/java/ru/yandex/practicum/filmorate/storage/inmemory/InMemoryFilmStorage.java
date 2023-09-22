@@ -1,12 +1,10 @@
 package ru.yandex.practicum.filmorate.storage.inmemory;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.*;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -22,7 +20,7 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
         if (!validate(film)) {
             throw new ValidationException(FILM_VALIDATION_MESSAGE);
         }
-        film = new Film(getId(), film.getTitle(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa());
+        film = new Film(getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa(), film.getRate(), film.getGenres());
         entities.put(film.getId(), film);
         return film;
     }
