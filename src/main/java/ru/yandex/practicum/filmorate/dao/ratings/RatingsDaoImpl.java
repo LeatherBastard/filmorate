@@ -13,14 +13,8 @@ import java.util.List;
 
 @Repository
 public class RatingsDaoImpl implements RatingsDao, RatingStorage {
-    private static final String GET_BY_ID_RATING_QUERY = "SELECT * FROM ratings WHERE rating_id = ?";
-    private static final String GET_ALL_RATINGS_QUERY = "SELECT * FROM ratings";
-    private static final String DELETE_BY_ID_RATING_QUERY = "DELETE FROM ratings WHERE rating_id = ?";
-    private static final String DELETE_ALL_RATINGS_QUERY = "DELETE FROM ratings;";
-    private static final String UPDATE_RATING_QUERY = "UPDATE ratings SET name = ?,description= ? WHERE rating_id = ?";
-    private static final String ID_RATINGS_COLUMN = "rating_id";
-    private static final String NAME_RATINGS_COLUMN = "name";
-    private static final String DESCRIPTION_RATINGS_COLUMN = "description";
+    private final static String RATING_ID_NOT_FOUND_MESSAGE = "Rating with id %d was not found!";
+
     private final JdbcTemplate jdbcTemplate;
 
     public RatingsDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -29,7 +23,7 @@ public class RatingsDaoImpl implements RatingsDao, RatingStorage {
 
     @Override
     public Rating add(Rating rating) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("genres")
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName(RATINGS_TABLE_NAME)
                 .usingGeneratedKeyColumns(ID_RATINGS_COLUMN);
         Integer genreId = simpleJdbcInsert.executeAndReturnKey(rating.toMap()).intValue();
         rating = new Rating(genreId, rating.getName(), rating.getDescription());
@@ -38,7 +32,7 @@ public class RatingsDaoImpl implements RatingsDao, RatingStorage {
 
     @Override
     public Rating getById(Integer id) {
-        if (id < 0 || id - 1 > getAll().size() - 1) {
+        if (!validateEntityId(id)) {
             throw new EntityNotFoundException(RATING_ID_NOT_FOUND_MESSAGE, id);
         }
         return jdbcTemplate.queryForObject(GET_BY_ID_RATING_QUERY, this::mapRowToRating, id);
@@ -50,17 +44,21 @@ public class RatingsDaoImpl implements RatingsDao, RatingStorage {
     }
 
 
-    public boolean deleteById(int id) {
-        return jdbcTemplate.update(DELETE_BY_ID_RATING_QUERY, id) > 0;
+    public boolean removeById(int id) {
+        return jdbcTemplate.update(REMOVE_BY_ID_RATING_QUERY, id) > 0;
     }
 
 
-    public int deleteAll() {
-        return jdbcTemplate.update(DELETE_ALL_RATINGS_QUERY);
+    public void removeAll() {
+        jdbcTemplate.update(REMOVE_ALL_RATINGS_QUERY);
+        jdbcTemplate.execute(RESTART_RATING_ID_AFTER_REMOVAL_QUERY);
     }
 
     @Override
     public Rating update(Rating rating) {
+        if (!validateEntityId(rating.getId())) {
+            throw new EntityNotFoundException(RATING_ID_NOT_FOUND_MESSAGE, rating.getId());
+        }
         jdbcTemplate.update(UPDATE_RATING_QUERY, rating.getName(), rating.getDescription(), rating.getId());
         return rating;
     }

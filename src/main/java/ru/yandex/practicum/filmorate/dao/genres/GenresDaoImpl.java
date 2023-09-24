@@ -16,15 +16,7 @@ import static ru.yandex.practicum.filmorate.storage.FilmStorage.FILM_ID_NOT_FOUN
 
 @Repository
 public class GenresDaoImpl implements GenresDao, GenreStorage {
-
-    private static final String GET_BY_ID_GENRE_QUERY = "SELECT * FROM genres WHERE genre_id = ?";
-    private static final String GET_FILM_GENRES_BY_ID_QUERY = "SELECT genre_id FROM film_genres WHERE film_id= ?";
-    private static final String GET_ALL_GENRES_QUERY = "SELECT * FROM genres";
-    private static final String DELETE_BY_ID_GENRE_QUERY = "DELETE FROM genres WHERE genre_id = ?";
-    private static final String DELETE_ALL_GENRES_QUERY = "DELETE FROM genres;";
-    private static final String UPDATE_GENRE_QUERY = "UPDATE genres SET name = ? WHERE genre_id= ?";
-    private static final String ID_GENRES_COLUMN = "genre_id";
-    private static final String NAME_GENRES_COLUMN = "name";
+    private final static String GENRE_ID_NOT_FOUND_MESSAGE = "Genre with id %d was not found!";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -34,7 +26,7 @@ public class GenresDaoImpl implements GenresDao, GenreStorage {
 
     @Override
     public Genre add(Genre genre) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("genres")
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName(GENRES_TABLE_NAME)
                 .usingGeneratedKeyColumns(ID_GENRES_COLUMN);
         Integer genreId = simpleJdbcInsert.executeAndReturnKey(genre.toMap()).intValue();
         genre = new Genre(genreId, genre.getName());
@@ -43,7 +35,7 @@ public class GenresDaoImpl implements GenresDao, GenreStorage {
 
     @Override
     public Genre getById(Integer id) {
-        if (id < 0 || id - 1 > getAll().size() - 1) {
+        if (!validateEntityId(id)) {
             throw new EntityNotFoundException(GENRE_ID_NOT_FOUND_MESSAGE, id);
         }
         Genre genre = jdbcTemplate.queryForObject(GET_BY_ID_GENRE_QUERY, this::mapRowToGenre, id);
@@ -54,7 +46,7 @@ public class GenresDaoImpl implements GenresDao, GenreStorage {
     }
 
     public List<Genre> getFilmGenresById(Integer filmId) {
-        if (filmId < 0 || filmId - 1 > getAll().size() - 1) {
+        if (!validateEntityId(filmId)) {
             throw new EntityNotFoundException(FILM_ID_NOT_FOUND_MESSAGE, filmId);
         }
         return jdbcTemplate.queryForList(GET_FILM_GENRES_BY_ID_QUERY, Integer.class, filmId).stream().map(this::getById).collect(Collectors.toList());
@@ -66,17 +58,21 @@ public class GenresDaoImpl implements GenresDao, GenreStorage {
     }
 
 
-    public boolean deleteById(int id) {
-        return jdbcTemplate.update(DELETE_BY_ID_GENRE_QUERY, id) > 0;
+    public boolean removeById(int id) {
+        return jdbcTemplate.update(REMOVE_BY_ID_GENRE_QUERY, id) > 0;
     }
 
 
-    public int deleteAll() {
-        return jdbcTemplate.update(DELETE_ALL_GENRES_QUERY);
+    public void removeAll() {
+        jdbcTemplate.update(REMOVE_ALL_GENRES_QUERY);
+        jdbcTemplate.execute(RESTART_GENRE_ID_AFTER_REMOVAL_QUERY);
     }
 
     @Override
     public Genre update(Genre genre) {
+        if (!validateEntityId(genre.getId())) {
+            throw new EntityNotFoundException(GENRE_ID_NOT_FOUND_MESSAGE, genre.getId());
+        }
         jdbcTemplate.update(UPDATE_GENRE_QUERY, genre.getName(), genre.getId());
         return genre;
     }

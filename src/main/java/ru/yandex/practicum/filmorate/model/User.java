@@ -3,15 +3,15 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.criteria.CriteriaBuilder;
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static ru.yandex.practicum.filmorate.dao.storage.UserDbStorage.COMMITTED_FRIENDSHIP_STATUS_ID;
-import static ru.yandex.practicum.filmorate.dao.storage.UserDbStorage.NOT_COMMITTED_FRIENDSHIP_STATUS_ID;
+import static ru.yandex.practicum.filmorate.dao.storage.users.UserDbStorage.COMMITTED_FRIENDSHIP_STATUS_ID;
+import static ru.yandex.practicum.filmorate.dao.storage.users.UserDbStorage.NOT_COMMITTED_FRIENDSHIP_STATUS_ID;
 
 @Data
 
@@ -42,7 +42,6 @@ public class User extends Entity {
     }
 
     public void removeFriend(User user) {
-        friends.remove(user.getId());
         FriendShip commitedFriendship = new FriendShip(getId(), COMMITTED_FRIENDSHIP_STATUS_ID);
         if (user.friends.contains(commitedFriendship)) {
             user.friends.remove(commitedFriendship);

@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.inmemory;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.*;
@@ -8,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.FriendShip;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,12 +57,14 @@ public class InMemoryUserStorage extends InMemoryStorage<User> implements UserSt
         return user;
     }
 
+    @Override
+    public void removeAll() {
+        entities.clear();
+    }
+
 
     @Override
     public void addToFriends(User user, User friend) {
-        if (user.getFriends().contains(friend.getId()) || friend.getFriends().contains(user.getId())) {
-            throw new AddRemoveFriendException(ADD_TO_FRIENDS_EXCEPTION_MESSAGE, user.getId(), friend.getId());
-        }
         user.addFriend(friend);
     }
 
@@ -78,9 +78,6 @@ public class InMemoryUserStorage extends InMemoryStorage<User> implements UserSt
 
     @Override
     public void removeFromFriends(User user, User friend) {
-        if (!user.getFriends().contains(friend.getId()) || !friend.getFriends().contains(user.getId())) {
-            throw new AddRemoveFriendException(REMOVE_FROM_FRIENDS_EXCEPTION_MESSAGE, user.getId(), friend.getId());
-        }
         user.removeFriend(friend);
     }
 

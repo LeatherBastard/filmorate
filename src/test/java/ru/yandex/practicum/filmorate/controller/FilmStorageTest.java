@@ -1,9 +1,10 @@
-/*
+
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.inmemory.InMemoryFilmStorage;
 
@@ -18,7 +19,6 @@ class FilmStorageTest {
     private static final String FILM_NAME = "Fight Club";
     private static final String FILM_DESCRIPTION = "An insomniac office worker and" +
             " a devil-may-care soap maker form an underground fight club that evolves into much more.";
-
     private FilmStorage filmStorage;
 
     @BeforeEach
@@ -30,7 +30,7 @@ class FilmStorageTest {
     void testValidateFilmIfAllValid() {
         Film film = new Film(0, FILM_NAME, FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
-                139, 3);
+                139, new Rating(3));
         assertTrue(filmStorage.validate(film));
     }
 
@@ -38,7 +38,7 @@ class FilmStorageTest {
     void testValidateFilmIfNameEmpty() {
         Film film = new Film(0, "", FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
-                139, 3);
+                139, new Rating(3));
         assertFalse(filmStorage.validate(film));
     }
 
@@ -51,7 +51,7 @@ class FilmStorageTest {
         Film film = new Film(0, FILM_NAME,
                 description,
                 LocalDate.of(2000, 1, 13),
-                139, 3);
+                139, new Rating(3));
         assertFalse(filmStorage.validate(film));
     }
 
@@ -60,7 +60,7 @@ class FilmStorageTest {
         Film film = new Film(0, FILM_NAME,
                 FILM_DESCRIPTION,
                 LocalDate.of(1894, 12, 13),
-                139, 3);
+                139, new Rating(3));
         assertFalse(filmStorage.validate(film));
     }
 
@@ -69,7 +69,7 @@ class FilmStorageTest {
         Film film = new Film(0, FILM_NAME,
                 FILM_DESCRIPTION,
                 LocalDate.of(2000, 1, 13),
-                -5, 3);
+                -5, new Rating(3));
         assertFalse(filmStorage.validate(film));
     }
 
@@ -77,4 +77,3 @@ class FilmStorageTest {
 }
 
 
-*/

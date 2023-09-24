@@ -1,7 +1,5 @@
 package ru.yandex.practicum.filmorate.model;
 
-
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -9,35 +7,37 @@ import java.util.*;
 
 @Data
 public class Film extends Entity {
-    private  String name;
-    private  String description;
-    private  LocalDate releaseDate;
-    private  List<Genre> genres = new ArrayList<>();
-    private  int duration;
+    private String name;
+    private String description;
+    private LocalDate releaseDate;
+    private List<Genre> genres = new ArrayList<>();
+    private int duration;
     private int rate = 0;
-    private  Set<Integer> likes = new HashSet<>();
-    private  Rating mpa;
+    private Set<Integer> likes = new HashSet<>();
+    private Rating mpa;
 
-    public Film()
-    {
-
+    public Film() {
     }
 
-    public Film(Integer id, String name,String description, LocalDate releaseDate, int duration,Rating mpa, int rate, List<Genre> genres) {
+    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, Rating mpa) {
         super(id);
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.rate = rate;
         this.mpa = mpa;
-        this.genres.addAll(genres);
     }
 
-
-
-
-
+    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, Rating mpa, int rate, List<Genre> genres) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+        this.rate = rate;
+        this.genres.addAll(genres);
+    }
 
     public void addLike(Integer userId) {
         likes.add(userId);
@@ -57,7 +57,7 @@ public class Film extends Entity {
         values.put("description", description);
         values.put("release_date", releaseDate);
         values.put("duration", duration);
-        values.put("rate",rate);
+        values.put("rate", rate);
         values.put("rating_id", mpa.getId());
         return values;
     }

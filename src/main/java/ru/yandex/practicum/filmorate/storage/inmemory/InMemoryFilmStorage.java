@@ -49,6 +49,11 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
     }
 
     @Override
+    public void removeAll() {
+        entities.clear();
+    }
+
+    @Override
     public void addLike(Film film, Integer userId) {
         if (film.getLikes().contains(userId)) {
             throw new AddRemoveLikeException(ADD_LIKE_EXCEPTION_MESSAGE, film.getId(), userId);

@@ -3,8 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.GenreService;
+import ru.yandex.practicum.filmorate.service.genre.GenreService;
 
 import java.util.List;
 
@@ -12,6 +11,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/genres")
 public class GenreController implements Controller<Genre> {
+    private static final String LOGGER_GET_GENRES_MESSAGE = "Returning list of genres";
+    private static final String LOGGER_ADD_GENRE_MESSAGE = "Adding genre with id: %d";
+    private static final String LOGGER_GET_GENRE_BY_ID_MESSAGE = "Getting genre with id: %d";
+    private static final String LOGGER_UPDATE_GENRE_MESSAGE = "Updating genre with id: %d";
 
     private final GenreService genreService;
 
@@ -22,24 +25,26 @@ public class GenreController implements Controller<Genre> {
     @Override
     @GetMapping
     public List<Genre> getAll() {
+        log.info(LOGGER_GET_GENRES_MESSAGE);
         return genreService.getAll();
     }
 
     @Override
-    @PostMapping
-    public Genre add(Genre entity) {
+    public Genre add( Genre entity) {
+        log.info(LOGGER_ADD_GENRE_MESSAGE, entity.getId());
         return genreService.add(entity);
     }
 
     @Override
     @GetMapping("/{id}")
-    public Genre getById(Integer id) {
+    public Genre getById(@PathVariable Integer id) {
+        log.info(LOGGER_GET_GENRE_BY_ID_MESSAGE, id);
         return genreService.getById(id);
     }
 
     @Override
-    @PutMapping
-    public Genre update(Genre entity) {
+    public Genre update( Genre entity) {
+        log.info(LOGGER_UPDATE_GENRE_MESSAGE, entity.getId());
         return genreService.update(entity);
     }
 }
