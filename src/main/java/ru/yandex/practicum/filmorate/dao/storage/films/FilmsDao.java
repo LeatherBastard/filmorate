@@ -27,6 +27,6 @@ public interface FilmsDao {
     String RELEASE_DATE_FILMS_COLUMN = "release_date";
     String DURATION_FILMS_COLUMN = "duration";
     String RATE_FILMS_COLUMN = "rate";
-    String RATING_ID_FILMS_COLUMN = "rating_id";
+    String RATING_NAME_FILMS_COLUMN = "rating_name";
     String FILMS_TABLE_NAME = "films";
 }
