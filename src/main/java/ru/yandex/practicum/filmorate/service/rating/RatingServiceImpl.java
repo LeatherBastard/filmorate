@@ -12,7 +12,7 @@ public class RatingServiceImpl implements RatingService {
 
     private final RatingStorage ratingStorage;
 
-    public RatingServiceImpl( RatingStorage ratingStorage) {
+    public RatingServiceImpl(RatingStorage ratingStorage) {
         this.ratingStorage = ratingStorage;
     }
 

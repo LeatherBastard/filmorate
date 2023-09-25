@@ -12,7 +12,7 @@ public class FilmServiceImp implements FilmService {
     @Qualifier("filmDbStorage")
     private final FilmStorage filmStorage;
 
-    public FilmServiceImp( @Qualifier("filmDbStorage")FilmStorage filmStorage) {
+    public FilmServiceImp(@Qualifier("filmDbStorage") FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
     }
 
@@ -53,6 +53,6 @@ public class FilmServiceImp implements FilmService {
 
     @Override
     public List<Film> getMostPopular(int count) {
-       return filmStorage.getMostPopular(count);
+        return filmStorage.getMostPopular(count);
     }
 }
