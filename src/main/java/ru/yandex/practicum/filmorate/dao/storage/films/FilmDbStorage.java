@@ -1,41 +1,43 @@
 package ru.yandex.practicum.filmorate.dao.storage.films;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.dao.ratings.RatingsDao;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UpdateEmptyIdException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.RatingStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
 import java.util.stream.Collectors;
 
+import static ru.yandex.practicum.filmorate.dao.ratings.RatingsDao.NAME_RATINGS_COLUMN;
 import static ru.yandex.practicum.filmorate.storage.UserStorage.USER_ID_NOT_FOUND_MESSAGE;
 
 @Repository
 
 public class FilmDbStorage implements FilmsDao, FilmStorage {
-    private static final  int like = 1;
+    private static final int like = 1;
     private final JdbcTemplate jdbcTemplate;
     @Qualifier("userDbStorage")
     private final UserStorage userStorage;
-    private final RatingStorage ratingStorage;
     private final GenreStorage genreStorage;
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, @Qualifier("userDbStorage") UserStorage userStorage, RatingStorage ratingStorage, GenreStorage genreStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.userStorage = userStorage;
-        this.ratingStorage = ratingStorage;
         this.genreStorage = genreStorage;
     }
 
@@ -54,8 +56,18 @@ public class FilmDbStorage implements FilmsDao, FilmStorage {
 
     private List<Genre> addGenresToFilm(Film film) {
         List<Integer> genresId = film.getGenres().stream().map(Genre::getId).distinct().collect(Collectors.toList());
-        for (Integer genreId : genresId)
-            jdbcTemplate.update(ADD_GENRE_TO_FILM_QUERY, film.getId(), genreId);
+        jdbcTemplate.batchUpdate(ADD_GENRE_TO_FILM_QUERY, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, film.getId());
+                ps.setInt(2, genresId.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return genresId.size();
+            }
+        });
         return genresId.stream().map(genreStorage::getById).collect(Collectors.toList());
     }
 
@@ -87,8 +99,7 @@ public class FilmDbStorage implements FilmsDao, FilmStorage {
 
     @Override
     public List<Film> getMostPopular(int count) {
-        List<Integer> filmIds = jdbcTemplate.queryForList(GET_MOST_POPULAR_FILMS_QUERY, Integer.class, count);
-        return filmIds.stream().map(this::getById).collect(Collectors.toList());
+        return jdbcTemplate.query(GET_MOST_POPULAR_FILMS_QUERY, this::mapRowToFilm, count);
     }
 
     public void removeAll() {
@@ -147,7 +158,9 @@ public class FilmDbStorage implements FilmsDao, FilmStorage {
                 resultSet.getString(DESCRIPTION_FILMS_COLUMN),
                 resultSet.getDate(RELEASE_DATE_FILMS_COLUMN).toLocalDate(),
                 resultSet.getInt(DURATION_FILMS_COLUMN),
-                ratingStorage.getById(resultSet.getInt(RATING_ID_FILMS_COLUMN)),
+                new Rating(resultSet.getInt(RatingsDao.ID_RATINGS_COLUMN),
+                        resultSet.getString(NAME_RATINGS_COLUMN),
+                        resultSet.getString(RatingsDao.DESCRIPTION_RATINGS_COLUMN)),
                 resultSet.getInt(RATE_FILMS_COLUMN),
                 genreStorage.getFilmGenresById(resultSet.getInt(ID_FILMS_COLUMN))
         );
