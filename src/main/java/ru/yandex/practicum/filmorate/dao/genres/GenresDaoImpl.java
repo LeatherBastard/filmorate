@@ -16,7 +16,7 @@ import static ru.yandex.practicum.filmorate.storage.FilmStorage.FILM_ID_NOT_FOUN
 
 @Repository
 public class GenresDaoImpl implements GenresDao, GenreStorage {
-    private final static String GENRE_ID_NOT_FOUND_MESSAGE = "Genre with id %d was not found!";
+    private static final  String GENRE_ID_NOT_FOUND_MESSAGE = "Genre with id %d was not found!";
 
     private final JdbcTemplate jdbcTemplate;
 

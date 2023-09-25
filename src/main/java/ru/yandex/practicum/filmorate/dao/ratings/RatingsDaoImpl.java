@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public class RatingsDaoImpl implements RatingsDao, RatingStorage {
-    private final static String RATING_ID_NOT_FOUND_MESSAGE = "Rating with id %d was not found!";
+    private static final  String RATING_ID_NOT_FOUND_MESSAGE = "Rating with id %d was not found!";
 
     private final JdbcTemplate jdbcTemplate;
 

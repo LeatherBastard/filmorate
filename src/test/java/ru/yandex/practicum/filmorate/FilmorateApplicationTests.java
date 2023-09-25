@@ -1,14 +1,12 @@
 package ru.yandex.practicum.filmorate;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.dao.storage.films.FilmDbStorage;
 import ru.yandex.practicum.filmorate.dao.storage.users.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
@@ -22,12 +20,10 @@ import ru.yandex.practicum.filmorate.storage.RatingStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest
@@ -57,7 +53,7 @@ class FilmorateApplicationTests {
         }
 
         @Test
-        void testGetUserByIdIfWrongID() {
+        void testGetUserByIdIfWrongId() {
             assertThrows(EntityNotFoundException.class, () -> userDbStorage.getById(999));
         }
 
@@ -108,7 +104,7 @@ class FilmorateApplicationTests {
             User testUser = new User(1, "kostrykinmark@gmail.com", "LeatherBastard", "Mark Kostrykin", LocalDate.now());
             userDbStorage.add(testUser);
             List<User> users = userDbStorage.getAll();
-            assertTrue(users.size() == 1);
+            assertEquals(1, users.size());
             assertEquals(testUser, users.get(0));
         }
 
@@ -120,7 +116,7 @@ class FilmorateApplicationTests {
             userDbStorage.add(testFriend);
             userDbStorage.addToFriends(testUser, testFriend);
             List<User> friends = userDbStorage.getFriends(testUser.getId());
-            assertTrue(friends.size() == 1);
+            assertEquals(1, friends.size());
             User actualFriend = friends.get(0);
             assertEquals(testFriend, actualFriend);
         }
@@ -136,7 +132,7 @@ class FilmorateApplicationTests {
             userDbStorage.addToFriends(testUser, testCommonFriend);
             userDbStorage.addToFriends(testFriend, testCommonFriend);
             List<User> commonFriends = userDbStorage.getCommonFriends(testUser, testFriend);
-            assertTrue(commonFriends.size() == 1);
+            assertEquals(1, commonFriends.size());
             User actualCommonFriend = commonFriends.get(0);
             assertEquals(testCommonFriend, actualCommonFriend);
         }
@@ -151,7 +147,7 @@ class FilmorateApplicationTests {
             userDbStorage.add(testCommonFriend);
             userDbStorage.removeAll();
             List<User> users = userDbStorage.getAll();
-            assertTrue(users.size() == 0);
+            assertEquals(0, users.size());
         }
 
         @Test
@@ -163,7 +159,7 @@ class FilmorateApplicationTests {
             userDbStorage.addToFriends(testUser, testFriend);
             userDbStorage.removeFromFriends(testUser, testFriend);
             List<User> friends = userDbStorage.getFriends(testUser.getId());
-            assertTrue(friends.size() == 0);
+            assertEquals(0, friends.size());
         }
     }
 
@@ -187,7 +183,7 @@ class FilmorateApplicationTests {
         }
 
         @Test
-        void testGetFilmByIdIfWrongID() {
+        void testGetFilmByIdIfWrongId() {
             assertThrows(EntityNotFoundException.class, () -> filmDbStorage.getById(999));
         }
 
@@ -264,9 +260,9 @@ class FilmorateApplicationTests {
                     139, new Rating(1, FILM_RATING_NAME, FILM_RATING_DESCRIPTION));
             userDbStorage.add(testUser);
             filmDbStorage.add(testFilm);
-            assertTrue(filmDbStorage.getById(1).getRate() == 0);
+            assertEquals(0, filmDbStorage.getById(1).getRate());
             filmDbStorage.addLike(testFilm, testUser.getId());
-            assertTrue(filmDbStorage.getById(1).getRate() == 1);
+            assertEquals(1, filmDbStorage.getById(1).getRate());
         }
 
         @Test
@@ -279,7 +275,7 @@ class FilmorateApplicationTests {
             filmDbStorage.add(testFilm);
             filmDbStorage.addLike(testFilm, testUser.getId());
             filmDbStorage.removeLike(testFilm, testUser.getId());
-            assertTrue(filmDbStorage.getById(1).getRate() == 0);
+            assertEquals(0, filmDbStorage.getById(1).getRate());
         }
 
         @Test
@@ -289,7 +285,7 @@ class FilmorateApplicationTests {
                     139, new Rating(1, FILM_RATING_NAME, FILM_RATING_DESCRIPTION));
             filmDbStorage.add(testFilm);
             List<Film> films = filmDbStorage.getAll();
-            assertTrue(films.size() == 1);
+            assertEquals(1, films.size());
             assertEquals(testFilm, films.get(0));
         }
 
@@ -301,7 +297,7 @@ class FilmorateApplicationTests {
             filmDbStorage.add(testFilm);
             filmDbStorage.removeAll();
             List<Film> films = filmDbStorage.getAll();
-            assertTrue(films.size() == 0);
+            assertEquals(0, films.size());
         }
 
         @Test
@@ -322,7 +318,7 @@ class FilmorateApplicationTests {
             filmDbStorage.addLike(secondTestFilm, testFriend.getId());
             Film secondTestFilmWithLikes = filmDbStorage.getById(2);
             List<Film> popularFilms = filmDbStorage.getMostPopular(2);
-            assertTrue(popularFilms.size() == 2);
+            assertEquals(2, popularFilms.size());
             assertEquals(secondTestFilmWithLikes, popularFilms.get(0));
         }
     }
@@ -332,13 +328,13 @@ class FilmorateApplicationTests {
         @Test
         void testGetGenreById() {
             Genre genre = genreStorage.getById(1);
-            assertTrue(genre.getId() == 1);
-            assertTrue(genre.getName().equals("Комедия"));
+            assertEquals(1, genre.getId());
+            assertEquals("Комедия", genre.getName());
         }
 
         @Test
-        void testGetGenreByIdIfWrongID() {
-            assertThrows(EntityNotFoundException.class, () -> filmDbStorage.getById(999));
+        void testGetGenreByIdIfWrongId() {
+            assertThrows(EntityNotFoundException.class, () -> genreStorage.getById(999));
         }
 
         @Test
@@ -352,7 +348,7 @@ class FilmorateApplicationTests {
             expectedGenres.add(new Genre(6, "Боевик"));
             List<Genre> genres = genreStorage.getAll();
 
-            assertTrue(genres.size() == 6);
+            assertEquals(6, genres.size());
             assertEquals(expectedGenres, genres);
         }
     }
@@ -361,29 +357,32 @@ class FilmorateApplicationTests {
     class RatingStorageTestMethods {
         @Test
         void testGetGenreById() {
-            Genre genre = genreStorage.getById(1);
-            assertTrue(genre.getId() == 1);
-            assertTrue(genre.getName().equals("Комедия"));
+            Rating rating = ratingStorage.getById(1);
+            assertEquals(1, rating.getId());
+            assertEquals("G", rating.getName());
+            assertEquals("All ages admitted. Nothing that would offend parents for viewing by children.",
+                    rating.getDescription());
         }
 
         @Test
-        void testGetGenreByIdIfWrongID() {
-            assertThrows(EntityNotFoundException.class, () -> filmDbStorage.getById(999));
+        void testGetGenreByIdIfWrongId() {
+            assertThrows(EntityNotFoundException.class, () -> ratingStorage.getById(999));
         }
 
         @Test
         void testGetAll() {
-            List<Genre> expectedGenres = new ArrayList<>();
-            expectedGenres.add(new Genre(1, "Комедия"));
-            expectedGenres.add(new Genre(2, "Драма"));
-            expectedGenres.add(new Genre(3, "Мультфильм"));
-            expectedGenres.add(new Genre(4, "Триллер"));
-            expectedGenres.add(new Genre(5, "Документальный"));
-            expectedGenres.add(new Genre(6, "Боевик"));
-            List<Genre> genres = genreStorage.getAll();
-
-            assertTrue(genres.size() == 6);
-            assertEquals(expectedGenres, genres);
+            List<Rating> expectedRatings = new ArrayList<>();
+            expectedRatings.add(new Rating(1, "G", "All ages admitted. Nothing that would offend parents for viewing by children."));
+            expectedRatings.add(new Rating(2, "PG", "Some material may not be suitable for children. Parents urged to give" +
+                    " \"parental guidance\". May contain some material parents might not like for their young children."));
+            expectedRatings.add(new Rating(3, "PG-13", "Some material may be inappropriate for children under 13." +
+                    " Parents are urged to be cautious. Some material may be inappropriate for pre-teenagers."));
+            expectedRatings.add(new Rating(4, "R", "Under 17 requires accompanying parent or adult guardian." +
+                    " Contains some adult material. Parents are urged to learn more about the film before taking their young children with them."));
+            expectedRatings.add(new Rating(5, "NC-17", "No one 17 and under admitted. Clearly adult. Children are not admitted."));
+            List<Rating> ratings = ratingStorage.getAll();
+            assertEquals(5, ratings.size());
+            assertEquals(expectedRatings, ratings);
         }
     }
 

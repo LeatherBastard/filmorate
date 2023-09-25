@@ -16,10 +16,7 @@ public interface Storage<T extends Entity> {
     void removeAll();
 
     default boolean validateEntityId(Integer entityId) {
-        if ((entityId < 0) || (entityId - 1 > getAll().size() - 1)) {
-            return false;
-        }
-        return true;
+        return !((entityId < 0) || (entityId - 1 > getAll().size() - 1));
     }
 
 }
