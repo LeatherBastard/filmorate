@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.dao.ratings.RatingsDao.NAME_RATINGS_COLUMN;
 import static ru.yandex.practicum.filmorate.storage.UserStorage.USER_ID_NOT_FOUND_MESSAGE;
 
 @Repository
