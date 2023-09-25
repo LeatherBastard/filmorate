@@ -1,7 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.service.rating.RatingService;
 
@@ -42,7 +45,7 @@ public class RatingController implements Controller<Rating> {
     }
 
     @Override
-    public Rating update( Rating entity) {
+    public Rating update(Rating entity) {
         log.info(LOGGER_UPDATE_RATING_MESSAGE, entity.getId());
         return ratingService.update(entity);
     }

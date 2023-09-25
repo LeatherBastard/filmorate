@@ -27,13 +27,13 @@ public class FilmController implements Controller<Film> {
         this.filmService = filmService;
     }
 
-   @GetMapping
+    @GetMapping
     public List<Film> getAll() {
         log.info(LOGGER_GET_FILMS_MESSAGE);
         return filmService.getAll();
     }
 
-   @PostMapping
+    @PostMapping
     public Film add(@RequestBody Film film) {
         log.info(String.format(LOGGER_ADD_FILM_MESSAGE, film.getId()));
         return filmService.add(film);
