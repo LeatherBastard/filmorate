@@ -159,7 +159,7 @@ public class FilmDbStorage implements FilmsDao, FilmStorage {
                 resultSet.getInt(DURATION_FILMS_COLUMN),
                 new Rating(resultSet.getInt(RatingsDao.ID_RATINGS_COLUMN),
                         resultSet.getString(RATING_NAME_FILMS_COLUMN),
-                        resultSet.getString(RatingsDao.DESCRIPTION_RATINGS_COLUMN)),
+                        resultSet.getString(RATING_DESCRIPTION_FILMS_COLUMN)),
                 resultSet.getInt(RATE_FILMS_COLUMN),
                 genreStorage.getFilmGenresById(resultSet.getInt(ID_FILMS_COLUMN))
         );
