@@ -1,7 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.genre.GenreService;
 
@@ -30,7 +33,7 @@ public class GenreController implements Controller<Genre> {
     }
 
     @Override
-    public Genre add( Genre entity) {
+    public Genre add(Genre entity) {
         log.info(LOGGER_ADD_GENRE_MESSAGE, entity.getId());
         return genreService.add(entity);
     }
@@ -43,7 +46,7 @@ public class GenreController implements Controller<Genre> {
     }
 
     @Override
-    public Genre update( Genre entity) {
+    public Genre update(Genre entity) {
         log.info(LOGGER_UPDATE_GENRE_MESSAGE, entity.getId());
         return genreService.update(entity);
     }
